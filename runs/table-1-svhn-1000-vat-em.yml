@@ -1,0 +1,10 @@
+session_name: table-1-svhn-1000-vat-em
+windows:
+        - window_name: experiments
+          layout: even-vertical
+          shell_command_before: cd /root/realistic-ssl-evaluation
+          panes:
+                  - CUDA_VISIBLE_DEVICES=0 python3 train_model.py --verbosity=0 --primary_dataset_name='svhn' --secondary_dataset_name='svhn' --root_dir=/mnt/experiment-logs/table-1-svhn-1000-vat-em --n_labeled=1000 --consistency_model=vat --hparam_string="entropy_penalty_multiplier=0.1"  2>&1 | tee /mnt/experiment-logs/table-1-svhn-1000-vat-em_train.log
+                  - CUDA_VISIBLE_DEVICES=1 python3 evaluate_model.py --split=test --verbosity=0 --primary_dataset_name='svhn' --root_dir=/mnt/experiment-logs/table-1-svhn-1000-vat-em --consistency_model=vat --hparam_string="entropy_penalty_multiplier=0.1"  2>&1 | tee /mnt/experiment-logs/table-1-svhn-1000-vat-em_eval_test.log
+                  - CUDA_VISIBLE_DEVICES=2 python3 evaluate_model.py --split=valid --verbosity=0 --primary_dataset_name='svhn' --root_dir=/mnt/experiment-logs/table-1-svhn-1000-vat-em --consistency_model=vat --hparam_string="entropy_penalty_multiplier=0.1"  2>&1 | tee /mnt/experiment-logs/table-1-svhn-1000-vat-em_eval_valid.log
+                  - CUDA_VISIBLE_DEVICES=3 python3 evaluate_model.py --split=train --verbosity=0 --primary_dataset_name='svhn' --root_dir=/mnt/experiment-logs/table-1-svhn-1000-vat-em --consistency_model=vat --hparam_string="entropy_penalty_multiplier=0.1"  2>&1 | tee /mnt/experiment-logs/table-1-svhn-1000-vat-em_eval_train.log

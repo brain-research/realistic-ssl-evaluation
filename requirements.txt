@@ -1,0 +1,5 @@
+numpy
+absl-py
+tensorflow-gpu
+scipy
+tmuxp
