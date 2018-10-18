@@ -503,8 +503,13 @@ def zca_normalize(image_batch, array_path):
         decomposition = np.load(f)
 
     _, height, width, channels = image_batch.shape
+    # Transpose back into the shape for which ZCA statistics were computed
+    # in build_tfrecords.py
+    image_batch = tf.transpose(image_batch, [0, 3, 1, 2])
     image_batch = tf.reshape(image_batch, [-1, height * width * channels])
     averages_tensor = tf.constant(averages, dtype=tf.float32)
     decomposition_tensor = tf.constant(decomposition, dtype=tf.float32)
     results = tf.matmul(image_batch - averages_tensor, decomposition_tensor)
-    return tf.reshape(results, [-1, height, width, channels])
+    results = tf.reshape(results, [-1, channels, height, width])
+    results = tf.transpose(results, [0, 2, 3, 1])
+    return results
