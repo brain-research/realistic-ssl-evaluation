@@ -208,7 +208,9 @@ tags
 [._]*.un~
 
 # The actual data
-data/imagenet_32/*
+data/imagenet_32*
+data/cifar10/*.tfrecords
+data/svhn/*.tfrecords
 
 # The experiment outputs
 experiments/*
