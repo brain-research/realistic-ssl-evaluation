@@ -1,0 +1,10 @@
+session_name: cifar-fine-tuning
+windows:
+        - window_name: experiments
+          layout: even-vertical
+          shell_command_before: cd /root/realistic-ssl-evaluation
+          panes:
+                  - CUDA_VISIBLE_DEVICES=0 python3 train_model.py --verbosity=0 --load_checkpoint=/mnt/experiment-logs/section-4-3-filtered-imagenet-pre-training/default/model.ckpt-500001 --training_length=1000000 --primary_dataset_name='cifar10' --secondary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning --n_labeled=4000 --consistency_model=mean_teacher --hparam_string="max_cons_multiplier=0"  2>&1 | tee /mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning_train.log
+                  - CUDA_VISIBLE_DEVICES=1 python3 evaluate_model.py --split=test --training_length=1000000 --verbosity=0 --primary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning --consistency_model=mean_teacher --hparam_string="max_cons_multiplier=0"  2>&1 | tee /mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning_eval_test.log
+                  - CUDA_VISIBLE_DEVICES=2 python3 evaluate_model.py --split=valid --training_length=1000000 --verbosity=0 --primary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning --consistency_model=mean_teacher --hparam_string="max_cons_multiplier=0"  2>&1 | tee /mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning_eval_valid.log
+                  - CUDA_VISIBLE_DEVICES=3 python3 evaluate_model.py --split=train --training_length=1000000 --verbosity=0 --primary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning --consistency_model=mean_teacher --hparam_string="max_cons_multiplier=0"  2>&1 | tee /mnt/experiment-logs/section-4-3-cifar-filtered-fine-tuning_eval_train.log
