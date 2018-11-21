@@ -198,6 +198,7 @@ def evaluate(hps, result_dir, tuner=None, trial_name=None):
                 consistency_model=FLAGS.consistency_model,
                 zca_input_file_path=FLAGS.zca_input_file_path,
             )
+            ssl_framework.global_step_init.mark_used()
             new_saver = tf.train.Saver(tf.global_variables())
 
             # We need a new session for each checkpoint
