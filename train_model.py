@@ -48,7 +48,7 @@ flags.DEFINE_string(
 )
 flags.DEFINE_integer("label_map_index", 0, "Index of the label map.")
 flags.DEFINE_integer(
-    "n_labeled", 10000, "Number of labeled examples, or -1 for entire dataset."
+    "n_labeled", -1, "Number of labeled examples, or -1 for entire dataset."
 )
 flags.DEFINE_integer(
     "training_length", 500000, "number of steps to train for."
