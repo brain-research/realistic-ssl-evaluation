@@ -254,9 +254,6 @@ def evaluate(hps, result_dir, tuner=None, trial_name=None):
             }
             logging.info(str(result_dict))
 
-            if FLAGS.evaluate_single_checkpoint:
-                return
-
             result_filename = "evaluation_results_{}_{}".format(
                 FLAGS.split, str(step)
             )
@@ -298,6 +295,9 @@ def evaluate(hps, result_dir, tuner=None, trial_name=None):
             # We will only ever call a file processed if the data has been written.
             # Thus, we should process all the files at least once.
             processed_files.append(meta_file)
+
+            if FLAGS.evaluate_single_checkpoint:
+                break
 
             if step >= FLAGS.training_length:
                 seen_last_step = True
