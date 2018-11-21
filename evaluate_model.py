@@ -78,6 +78,12 @@ flags.DEFINE_string(
 flags.mark_flag_as_required("root_dir")
 
 flags.DEFINE_string(
+    "summary_dir", None,
+    "The directory where summaries are logged. Default is "
+    "<root_root>/<experiment_name>/<split>."
+)
+
+flags.DEFINE_string(
     "experiment_name", "default", "The name of this particular experiment"
 )
 flags.DEFINE_string(
@@ -119,7 +125,10 @@ def evaluate(hps, result_dir, tuner=None, trial_name=None):
 
         # Once we know result_dir exists, it's safe to create summary writer.
         # This writer persists across all sessions and graphs
-        summary_dir = os.path.join(result_dir, FLAGS.split)
+        if FLAGS.summary_dir:
+            summary_dir = FLAGS.summary_dir
+        else:
+            summary_dir = os.path.join(result_dir, FLAGS.split)
         if not tf.gfile.Exists(summary_dir):
             tf.gfile.MakeDirs(summary_dir)
         writer = tf.summary.FileWriter(summary_dir)
