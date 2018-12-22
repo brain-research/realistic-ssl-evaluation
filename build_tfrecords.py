@@ -193,7 +193,7 @@ def main(_):
     elif FLAGS.dataset_name == "cifar10":
         train_set, test_set = _load_cifar10(normalize=True)
     elif FLAGS.dataset_name == "cifar_unnormalized":
-        train_set, test_set = _load_cifar10(normalize=True)
+        train_set, test_set = _load_cifar10(normalize=False)
     elif FLAGS.dataset_name == "imagenet_32":
         train_set, test_set = _load_imagenet_32()
     else:
