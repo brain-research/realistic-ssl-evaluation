@@ -70,6 +70,7 @@ consistency_model_overrides = dict(
     pseudo_label=dict(
         consistency_func="reverse_kl", max_cons_multiplier=1.0, initial_lr=3e-4
     ),
+    none=dict(max_cons_multiplier=0.),
 )
 
 # HParam overrides for different datasets
