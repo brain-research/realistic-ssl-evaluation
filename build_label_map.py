@@ -58,16 +58,13 @@ from lib import paths
 
 
 flags.DEFINE_string("dataset_name", "default", "Name of source dataset.")
-flags.DEFINE_integer(
-    "n_labeled_min", 10, "Least number of labeled examples to use."
+flags.DEFINE_string(
+    "n_labeled_list",
+    "100,250,500,1000,2000,4000,8000",
+    "Comma-separated list of label counts to create label maps for."
 )
-flags.DEFINE_integer(
-    "n_labeled_max", 100, "Most number of labeled examples to use (inclusive)."
-)
-flags.DEFINE_integer("n_labeled_step", 10, "Increment to change n_labeled by.")
-flags.DEFINE_integer(
-    "label_map_copies", 2, "Number of random maps to generate per label count."
-)
+flags.DEFINE_integer("label_map_index", 0, "Identifier for this label map.")
+flags.DEFINE_integer("seed", 0, "Random seed for determinism.")
 flags.DEFINE_string(
     "fkeys_path",
     paths.LABEL_MAP_PATH,
@@ -83,20 +80,16 @@ FLAGS = flags.FLAGS
 
 
 def main(_):
+    random.seed(FLAGS.seed)
     # Build a label map for each label_count, with several seeds
-    for n_labeled in range(
-        FLAGS.n_labeled_min,
-        FLAGS.n_labeled_max + FLAGS.n_labeled_step,
-        FLAGS.n_labeled_step,
-    ):
-        for label_map_index in range(FLAGS.label_map_copies):
-            build_single_label_map(
-                n_labeled,
-                label_map_index,
-                FLAGS.dataset_name,
-                FLAGS.imagenet_path,
-                FLAGS.fkeys_path,
-            )
+    for n_labeled in [int(n) for n in FLAGS.n_labeled_list.split(',')]:
+        build_single_label_map(
+            n_labeled,
+            FLAGS.label_map_index,
+            FLAGS.dataset_name,
+            FLAGS.imagenet_path,
+            FLAGS.fkeys_path,
+        )
 
 
 def build_single_label_map(

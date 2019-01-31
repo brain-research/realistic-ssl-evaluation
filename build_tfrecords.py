@@ -54,6 +54,8 @@ flags.DEFINE_string(
     "Directory to download and write to.",
 )
 
+flags.DEFINE_integer("seed", 0, "Random seed for determinism.")
+
 flags.DEFINE_string("dataset_name", "default", "Name of dataset")
 
 FLAGS = flags.FLAGS
@@ -181,6 +183,8 @@ def _load_cifar10(normalize):
 
 
 def main(_):
+
+    np.random.seed(FLAGS.seed)
 
     train_count = COUNTS[FLAGS.dataset_name]["train"]
     validation_count = COUNTS[FLAGS.dataset_name]["valid"]
