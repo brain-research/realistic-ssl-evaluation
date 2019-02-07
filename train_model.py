@@ -43,12 +43,12 @@ flags.DEFINE_string(
 )
 flags.DEFINE_string(
     "secondary_dataset_name",
-    "svhn",
-    "Name of dataset containing secondary data.",
+    "",
+    "Name of dataset containing secondary data. Defaults to primary dataset",
 )
 flags.DEFINE_integer("label_map_index", 0, "Index of the label map.")
 flags.DEFINE_integer(
-    "n_labeled", 10000, "Number of labeled examples, or -1 for entire dataset."
+    "n_labeled", -1, "Number of labeled examples, or -1 for entire dataset."
 )
 flags.DEFINE_integer(
     "training_length", 500000, "number of steps to train for."
@@ -153,7 +153,9 @@ def train(hps, result_dir, tuner=None, trial_name=None):
 
         images, labels, _, _, _, _ = data_provider.get_simple_mixed_batch(
             labeled_dataset_name=FLAGS.primary_dataset_name,
-            unlabeled_dataset_name=FLAGS.secondary_dataset_name,
+            unlabeled_dataset_name=(
+                FLAGS.secondary_dataset_name or
+                FLAGS.primary_dataset_name),
             split="train",
             batch_size=FLAGS.batch_size,
             shuffle_buffer_size=1000,

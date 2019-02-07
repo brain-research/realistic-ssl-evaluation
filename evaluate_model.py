@@ -219,17 +219,14 @@ def evaluate(hps, result_dir, tuner=None, trial_name=None):
 
             logging.info("Evaluating batches.")
             while True:
-                try:
-                    image_batch, label_batch = sess.run([images, labels])
-                except tf.errors.OutOfRangeError:
-                    break
-
-                fetches = [ssl_framework.global_step, ssl_framework.logits]
+                fetches = [ssl_framework.global_step, ssl_framework.logits, labels]
                 feed_dict = {
-                    ssl_framework.inputs: image_batch,
                     ssl_framework.is_training: False,
                 }
-                step, output = sess.run(fetches, feed_dict=feed_dict)
+                try:
+                    step, output, label_batch = sess.run(fetches, feed_dict=feed_dict)
+                except tf.errors.OutOfRangeError:
+                    break
 
                 correct += np.sum(np.argmax(output, 1) == label_batch)
                 this_top_k = top_k(output, TOP_K_VALUE)
