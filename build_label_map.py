@@ -113,7 +113,7 @@ def build_single_label_map(
             We may want many label_maps w/ same value of n_labeled.
             This allows us to disambiguate.
         dataset_name: A string representing the name of the dataset.
-            One of 'cifar10', 'svhn', 'imagenet', or 'cifar_unnormalized'.
+            One of 'cifar10', 'svhn', 'imagenet'.
         imagenet_path: A string that encodes the location of the raw imagenet
             data.
         fkeys_path: A string that encodes where to read fkeys from and write
@@ -143,7 +143,7 @@ def build_single_label_map(
             result_dict["values"] += random.sample(
                 unique_ids, n_labeled_per_class
             )
-    elif dataset_name in {"cifar10", "svhn", "cifar_unnormalized"}:
+    elif dataset_name in {"cifar10", "svhn"}:
         path = os.path.join(fkeys_path, dataset_name, "label_to_fkeys_train")
         with gfile.GFile(path, "r") as f:
             label_to_fkeys = json.load(f)

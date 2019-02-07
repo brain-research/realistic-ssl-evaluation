@@ -75,7 +75,6 @@ consistency_model_overrides = dict(
 
 # HParam overrides for different datasets
 cifar10_overrides = dict(horizontal_flip=True)
-cifar_unnormalized_overrides = cifar10_overrides
 
 imagenet_overrides = dict(
     horizontal_flip=True,
@@ -86,7 +85,6 @@ imagenet_overrides = dict(
 svhn_overrides = dict(gaussian_noise=False, vat_epsilon=1.0)
 dataset_overrides = dict(
     cifar10=cifar10_overrides,
-    cifar_unnormalized=cifar_unnormalized_overrides,
     imagenet=imagenet_overrides,
     imagenet_32=imagenet_overrides,
     imagenet_64=imagenet_overrides,
