@@ -14,7 +14,7 @@ The latest version of this repository can be found
 # Prepare datasets
 
 For SVHN and CIFAR-10, we provide scripts to automatically download and preprocess the data.
-We also provide a script to create "label maps", which specify which entries of the dataset should be treated as labeled and unlabeled.
+We also provide a script to create "label maps", which specify which entries of the dataset should be treated as labeled and unlabeled. Both of these scripts use an explicitly chosen random seed, so the same dataset order and label maps will be created each time. The random seeds can be overridden, for example to test robustness to different labeled splits.
 Run those scripts as follows:
 
 ```sh
