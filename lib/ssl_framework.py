@@ -173,14 +173,17 @@ class SSLFramework(object):
         self.cons_multiplier = cons_multiplier * self.hps.max_cons_multiplier
 
         cons_mask = tf.equal(-1, self.labels)
-
-        self.cons_loss = ssl_utils.diff_costs(
-            self.hps.consistency_func,
-            cons_mask,
-            self.logits_student,
-            self.logits_teacher,
-            self.cons_multiplier,
-        )
+        
+        if self.consistency_model != "none":
+            self.cons_loss = ssl_utils.diff_costs(
+                self.hps.consistency_func,
+                cons_mask,
+                self.logits_student,
+                self.logits_teacher,
+                self.cons_multiplier,
+            )
+        else:
+            self.cons_loss = tf.zeros_like(self.labeled_loss)
 
         self.ent_loss = ssl_utils.entropy_penalty(
             self.logits_student,
@@ -285,6 +288,8 @@ class SSLFramework(object):
                     * pseudo_labels
                     + tf.cast(less_than_thresh, probs.dtype) * output
                 )
+            elif self.consistency_model == "none":
+                output_student = output_teacher = tf.stop_gradient(output)
             else:
                 assert False, "Unexpected consistency model {}".format(
                     self.consistency_model
