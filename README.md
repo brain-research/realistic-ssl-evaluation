@@ -45,7 +45,7 @@ ImageNet32x32 is the only dataset which must be downloaded manually, due to lice
 
 # Running experiments
 
-All of the experiments in our paper are accompanied by a .yml file in `runs/`.These .yml files are intended to be used with [https://github.com/tmux-python/tmuxp](tmuxp), which is a session manager for tmux.
+All of the experiments in our paper are accompanied by a .yml file in `runs/`.These .yml files are intended to be used with [tmuxp](https://github.com/tmux-python/tmuxp), which is a session manager for tmux.
 They essentially provide a simple way to create a tmux session with all of the relevant tasks running (model training and evaluation).
 The .yml files are named according to their corresponding figure/table/section in the paper.
 For example, if you want to run an experiment evaluating VAT with 500 labels as shown in Figure 3, you could run
