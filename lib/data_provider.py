@@ -55,7 +55,6 @@ def get_simple_mixed_batch(
         unlabeled_data_filter_fn (function): Function to decide which unlabeled
             data to look at. Same signature as labeled_data_filter.
         mode (str): "labeled" - use only labeled data,
-                    "unlabeled" - use only unlabel data,
                     "mix" (default) -  use mixed data
 
     Returns:
