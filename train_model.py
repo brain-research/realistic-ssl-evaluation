@@ -86,7 +86,6 @@ flags.DEFINE_string(
     "dataset_mode",
     "mix",
     "'labeled' - use only labeled data to train the model. "
-    "'unlabeled' - use only unlabel data to train the model"
     "'mix' (default) -  use mixed data to train the model",
 )
 
