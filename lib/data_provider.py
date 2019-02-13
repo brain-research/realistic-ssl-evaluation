@@ -134,6 +134,7 @@ def get_simple_mixed_batch(
     elif mode == "unlabeled":
         dataset = unlabeled_dataset
     else:
+        assert mode == "mix"
         dataset = dataset_utils.shuffle_merge(
             labeled_dataset, unlabeled_dataset
         )
