@@ -67,12 +67,6 @@ COUNTS = {
         "valid": 50050,
         "extra": 0,
     },
-    "cifar_unnormalized": {
-        "train": 50000,
-        "test": 10000,
-        "valid": 5000,
-        "extra": 0,
-    },
 }
 
 URLS = {
@@ -192,8 +186,6 @@ def main(_):
         train_set, test_set, extra_set = _load_svhn()
     elif FLAGS.dataset_name == "cifar10":
         train_set, test_set = _load_cifar10(normalize=True)
-    elif FLAGS.dataset_name == "cifar_unnormalized":
-        train_set, test_set = _load_cifar10(normalize=False)
     elif FLAGS.dataset_name == "imagenet_32":
         train_set, test_set = _load_imagenet_32()
     else:
