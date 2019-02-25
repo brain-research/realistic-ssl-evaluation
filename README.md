@@ -14,22 +14,17 @@ The latest version of this repository can be found
 # Prepare datasets
 
 For SVHN and CIFAR-10, we provide scripts to automatically download and preprocess the data.
+We also provide a script to create "label maps", which specify which entries of the dataset should be treated as labeled and unlabeled. Both of these scripts use an explicitly chosen random seed, so the same dataset order and label maps will be created each time. The random seeds can be overridden, for example to test robustness to different labeled splits.
 Run those scripts as follows:
 
 ```sh
 python3 build_tfrecords.py --dataset_name=cifar10
+python3 build_label_map.py --dataset_name=cifar10
 python3 build_tfrecords.py --dataset_name=svhn
-python3 build_tfrecords.py --dataset_name=imagenet_32
+python3 build_label_map.py --dataset_name=svhn
 ```
 
-Final accuracy numbers for semi-supervised learning can vary significantly based on which labels from the training set are retained.
-We specify which images should have their labels retained via "label maps".
-This codebase is distributed with the label maps we use in our paper in the `data/` subdirectory.
-If desired, you can generate new label maps by using the `build_label_map.py` script, but note that in doing so you will not be able to reliably compare your results to others (such as our own) which are based on different label maps.
-
-# Preparing ImageNet 32x32 dataset for fine-tuning experiment
-
-First you'll need to download the 32x32 version of the ImageNet dataset by following the instructions [here](https://patrykchrabaszcz.github.io/Imagenet32/).
+For ImageNet 32x32 (only used in the fine-tuning experiment), you'll first need to download the 32x32 version of the ImageNet dataset by following the instructions [here](https://patrykchrabaszcz.github.io/Imagenet32/).
 Unzip the resulting files and put them in a directory called 'data/imagenet_32'.
 You'll then need to convert those files (which are pickle files) into .npy files.
 You can do this by executing:
@@ -39,6 +34,12 @@ mkdir data/imagenet_32
 unzip Imagenet32_train.zip -d data/imagenet_32
 unzip Imagenet32_val.zip -d data/imagenet_32
 python3 convert_imagenet.py
+```
+
+Then you can build the TFRecord files like so:
+
+```sh
+python3 build_tfrecords.py --dataset_name=imagenet_32
 ```
 
 ImageNet32x32 is the only dataset which must be downloaded manually, due to licensing issues.

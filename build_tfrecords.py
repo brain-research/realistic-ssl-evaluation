@@ -54,6 +54,8 @@ flags.DEFINE_string(
     "Directory to download and write to.",
 )
 
+flags.DEFINE_integer("seed", 0, "Random seed for determinism.")
+
 flags.DEFINE_string("dataset_name", "default", "Name of dataset")
 
 FLAGS = flags.FLAGS
@@ -182,6 +184,8 @@ def _load_cifar10(normalize):
 
 def main(_):
 
+    rng = np.random.RandomState(FLAGS.seed)
+
     train_count = COUNTS[FLAGS.dataset_name]["train"]
     validation_count = COUNTS[FLAGS.dataset_name]["valid"]
     test_count = COUNTS[FLAGS.dataset_name]["test"]
@@ -200,13 +204,13 @@ def main(_):
         raise ValueError("Unknown dataset", FLAGS.dataset_name)
 
     # Shuffle the training data
-    indices = np.random.permutation(train_set["images"].shape[0])
+    indices = rng.permutation(train_set["images"].shape[0])
     train_set["images"] = train_set["images"][indices]
     train_set["labels"] = train_set["labels"][indices]
 
     # If the extra set exists, shuffle it.
     if extra_set is not None:
-        extra_indices = np.random.permutation(extra_set["images"].shape[0])
+        extra_indices = rng.permutation(extra_set["images"].shape[0])
         extra_set["images"] = extra_set["images"][extra_indices]
         extra_set["labels"] = extra_set["labels"][extra_indices]
 

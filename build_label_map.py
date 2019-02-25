@@ -46,28 +46,25 @@ from __future__ import print_function
 
 import json
 import os
-import random
 
 from tensorflow.python.platform import app
 from tensorflow.python.platform import flags
 from tensorflow.python.platform import gfile
 from absl import logging
+import numpy as np
 
 from lib import dataset_utils
 from lib import paths
 
 
 flags.DEFINE_string("dataset_name", "default", "Name of source dataset.")
-flags.DEFINE_integer(
-    "n_labeled_min", 10, "Least number of labeled examples to use."
+flags.DEFINE_string(
+    "n_labeled_list",
+    "100,250,500,1000,2000,4000,8000",
+    "Comma-separated list of label counts to create label maps for."
 )
-flags.DEFINE_integer(
-    "n_labeled_max", 100, "Most number of labeled examples to use (inclusive)."
-)
-flags.DEFINE_integer("n_labeled_step", 10, "Increment to change n_labeled by.")
-flags.DEFINE_integer(
-    "label_map_copies", 2, "Number of random maps to generate per label count."
-)
+flags.DEFINE_integer("label_map_index", 0, "Identifier for this label map.")
+flags.DEFINE_integer("seed", 0, "Random seed for determinism.")
 flags.DEFINE_string(
     "fkeys_path",
     paths.LABEL_MAP_PATH,
@@ -83,24 +80,21 @@ FLAGS = flags.FLAGS
 
 
 def main(_):
+    rng = np.random.RandomState(FLAGS.seed)
     # Build a label map for each label_count, with several seeds
-    for n_labeled in range(
-        FLAGS.n_labeled_min,
-        FLAGS.n_labeled_max + FLAGS.n_labeled_step,
-        FLAGS.n_labeled_step,
-    ):
-        for label_map_index in range(FLAGS.label_map_copies):
-            build_single_label_map(
-                n_labeled,
-                label_map_index,
-                FLAGS.dataset_name,
-                FLAGS.imagenet_path,
-                FLAGS.fkeys_path,
-            )
+    for n_labeled in [int(n) for n in FLAGS.n_labeled_list.split(',')]:
+        build_single_label_map(
+            n_labeled,
+            FLAGS.label_map_index,
+            FLAGS.dataset_name,
+            FLAGS.imagenet_path,
+            FLAGS.fkeys_path,
+            rng,
+        )
 
 
 def build_single_label_map(
-    n_labeled, label_map_index, dataset_name, imagenet_path, fkeys_path
+    n_labeled, label_map_index, dataset_name, imagenet_path, fkeys_path, rng
 ):
     """Builds just one label map - we call this in a larger loop.
 
@@ -118,6 +112,7 @@ def build_single_label_map(
             data.
         fkeys_path: A string that encodes where to read fkeys from and write
             label_maps to.
+        rng: np.random.RandomState instance for drawing random numbers.
 
     Raises:
         ValueError: if passed an unrecognized dataset_name.
@@ -140,17 +135,21 @@ def build_single_label_map(
                 f[: -len(".JPEG")]
                 for f in gfile.ListDir(os.path.join(imagenet_path, synset))
             ]
-            result_dict["values"] += random.sample(
-                unique_ids, n_labeled_per_class
+            random_ids = rng.choice(
+                len(unique_ids), n_labeled_per_class, replace=False
             )
+            result_dict["values"] += [unique_ids[n] for n in random_ids]
     elif dataset_name in {"cifar10", "svhn", "cifar_unnormalized"}:
         path = os.path.join(fkeys_path, dataset_name, "label_to_fkeys_train")
         with gfile.GFile(path, "r") as f:
             label_to_fkeys = json.load(f)
         for label in label_to_fkeys.keys():
-            result_dict["values"] += random.sample(
-                label_to_fkeys[label], n_labeled_per_class
+            random_ids = rng.choice(
+                len(label_to_fkeys[label]), n_labeled_per_class, replace=False
             )
+            result_dict["values"] += [
+                label_to_fkeys[label][n] for n in random_ids
+            ]
     else:
         raise ValueError("Dataset not supported: {}.".format(dataset_name))
 
