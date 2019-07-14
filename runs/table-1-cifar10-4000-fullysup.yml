@@ -4,7 +4,7 @@ windows:
           layout: even-vertical
           shell_command_before: cd /root/realistic-ssl-evaluation
           panes:
-                  - CUDA_VISIBLE_DEVICES=0 python3 train_model.py --verbosity=0 --primary_dataset_name='cifar10' --secondary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/table-1-cifar10-4000-fullysup --n_labeled=4000 --consistency_model=none 2>&1 | tee /mnt/experiment-logs/table-1-cifar10-4000-fullysup_train.log
+                  - CUDA_VISIBLE_DEVICES=0 python3 train_model.py --verbosity=0 --primary_dataset_name='cifar10' --secondary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/table-1-cifar10-4000-fullysup --n_labeled=4000 --dataset_model=labeled --consistency_model=none 2>&1 | tee /mnt/experiment-logs/table-1-cifar10-4000-fullysup_train.log
                   - CUDA_VISIBLE_DEVICES=1 python3 evaluate_model.py --split=test --verbosity=0 --primary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/table-1-cifar10-4000-fullysup --consistency_model=none 2>&1 | tee /mnt/experiment-logs/table-1-cifar10-4000-fullysup_eval_test.log
                   - CUDA_VISIBLE_DEVICES=2 python3 evaluate_model.py --split=valid --verbosity=0 --primary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/table-1-cifar10-4000-fullysup --consistency_model=none 2>&1 | tee /mnt/experiment-logs/table-1-cifar10-4000-fullysup_eval_valid.log
                   - CUDA_VISIBLE_DEVICES=3 python3 evaluate_model.py --split=train --verbosity=0 --primary_dataset_name='cifar10' --root_dir=/mnt/experiment-logs/table-1-cifar10-4000-fullysup --consistency_model=none 2>&1 | tee /mnt/experiment-logs/table-1-cifar10-4000-fullysup_eval_train.log

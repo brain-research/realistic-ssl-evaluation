@@ -34,6 +34,7 @@ def get_simple_mixed_batch(
     shuffle_buffer_size,
     labeled_data_filter_fn=None,
     unlabeled_data_filter_fn=None,
+    mode="mix",
 ):
     """A less flexible, more memory-efficient version of get_simple_mixed_batch.
 
@@ -53,6 +54,8 @@ def get_simple_mixed_batch(
             key.  Returns a boolean tensor. Defaults to no filter (all images).
         unlabeled_data_filter_fn (function): Function to decide which unlabeled
             data to look at. Same signature as labeled_data_filter.
+        mode (str): "labeled" - use only labeled data,
+                    "mix" (default) -  use mixed data
 
     Returns:
         A tuple (images, labels, batch_count, remainder, num_classes), where:
@@ -124,10 +127,13 @@ def get_simple_mixed_batch(
 
     # These operations merge the datasets in a way that intersperses
     # elements from each, rather than just concatenating them.
-    if labeled_dataset_name == "imagenet_32":
+    if labeled_dataset_name == "imagenet_32" or mode == "labeled":
         # Don't waste batch space for imagenet pre-training.
         dataset = labeled_dataset
+    elif mode == "unlabeled":
+        dataset = unlabeled_dataset
     else:
+        assert mode == "mix"
         dataset = dataset_utils.shuffle_merge(
             labeled_dataset, unlabeled_dataset
         )

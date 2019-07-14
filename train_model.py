@@ -82,6 +82,12 @@ flags.DEFINE_string(
     "datasets being used as unlabeled data. Defaults to all "
     "classes.",
 )
+flags.DEFINE_string(
+    "dataset_mode",
+    "mix",
+    "'labeled' - use only labeled data to train the model. "
+    "'mix' (default) -  use mixed data to train the model",
+)
 
 # Flags for book-keeping
 flags.DEFINE_string(
@@ -154,6 +160,7 @@ def train(hps, result_dir, tuner=None, trial_name=None):
             shuffle_buffer_size=1000,
             labeled_data_filter_fn=labeled_data_filter_fn,
             unlabeled_data_filter_fn=unlabeled_data_filter_fn,
+            mode=FLAGS.dataset_mode,
         )
 
         logging.info("Training data tensors constructed.")
